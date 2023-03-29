@@ -1,0 +1,23 @@
+# This manifest defines a Namespace test-baseline-ns that:
+
+# Blocks any pods that don't satisfy the baseline policy requirements.
+# Generates a user-facing warning and adds an audit annotation to any created pod that does not meet the restricted policy requirements.
+# Pins the versions of the baseline and restricted policies to v1.26.
+
+cat <<EOF | kubectl apply -f -
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-baseline-ns
+  labels:
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: v1.26
+
+    # We are setting these to our _desired_ `enforce` level.
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: v1.26
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.26
+    
+EOF
